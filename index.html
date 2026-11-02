@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APTIS STUDY - Hệ Thống Luyện Thi Tốc Độ Cao</title>
+    <style>
+        :root {
+            --primary-blue: #0a2540; /* Xanh lam đậm chuyên nghiệp */
+            --secondary-blue: #183e6c;
+            --accent-blue: #0066cc;
+            --bg-white: #ffffff;
+            --bg-light: #f4f7f9;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 12px rgba(10, 37, 64, 0.08);
+            --transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* HEADER */
+        header {
+            background-color: var(--primary-blue);
+            color: var(--bg-white);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge-pro {
+            background-color: var(--accent-blue);
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .btn-back {
+            background-color: rgba(255, 255, 255, 0.12);
+            color: var(--bg-white);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .btn-back:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        /* MAIN CONTAINER */
+        main {
+            flex: 1;
+            max-width: 960px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem 1.2rem;
+        }
+
+        /* VIEWS MANAGEMENT */
+        .view {
+            display: none;
+            animation: fadeIn 0.18s ease-out;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* HOME VIEW - 5 SKILLS */
+        .welcome-box {
+            background: var(--bg-white);
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border-left: 6px solid var(--primary-blue);
+        }
+
+        .welcome-box h1 {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .welcome-box p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .skill-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .skill-card {
+            background-color: var(--bg-white);
+            border-radius: 12px;
+            padding: 1.75rem 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--primary-blue);
+            transition: var(--transition);
+        }
+
+        .skill-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(10, 37, 64, 0.14);
+            border-color: var(--accent-blue);
+        }
+
+        .skill-card:hover::before {
+            background-color: var(--accent-blue);
+            height: 6px;
+        }
+
+        .skill-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 1rem;
+        }
+
+        .skill-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            background-color: rgba(10, 37, 64, 0.06);
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .skill-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .skill-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 1.2rem;
+        }
+
+        .skill-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            padding-top: 0.8rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* LESSON LIST VIEW */
+        .section-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.6rem;
+            color: var(--primary-blue);
+            margin-bottom: 0.3rem;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+        }
+
+        .lesson-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .lesson-item {
+            background-color: var(--bg-white);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            transition: var(--transition);
+        }
+
+        .lesson-item:hover {
+            border-color: var(--primary-blue);
+        }
+
+        .lesson-info {
+            flex: 1;
+            min-width: 240px;
+        }
+
+        .lesson-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 0.35rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .teacher-tip {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            background-color: var(--bg-light);
+            padding: 6px 10px;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-blue);
+            margin-top: 6px;
+        }
+
+        .lesson-actions {
+            display: flex;
+            gap: 0.6rem;
+        }
+
+        .btn {
+            padding: 0.65rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--bg-white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-blue);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-blue);
+            border: 1.5px solid var(--primary-blue);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(10, 37, 64, 0.05);
+        }
+
+        /* PRACTICE IFRAME VIEW (HỌC TRỰC TIẾP TRONG APP) */
+        #practice-view {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-white);
+            z-index: 90;
+            display: none;
+            flex-direction: column;
+        }
+
+        #practice-view.active {
+            display: flex;
+        }
+
+        .practice-toolbar {
+            background-color: var(--bg-light);
+            padding: 0.6rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .practice-title {
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .iframe-container {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-white);
+            margin-top: auto;
+        }
+
+        @media (max-width: 600px) {
+            .lesson-actions {
+                width: 100%;
+            }
+            .btn {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-left">
+            <button id="btn-back" class="btn-back" onclick="goBack()">
+                &#8592; Quay lại
+            </button>
+            <div class="app-title" onclick="showHome()">
+                <span>APTIS STUDY</span>
+                <span class="badge-pro">Speed App</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <!-- TRANG CHỦ: 5 MỤC LỰA CHỌN -->
+        <div id="home-view" class="view active">
+            <div class="welcome-box">
+                <h1>Hệ Thống Luyện Tập Tập Trung</h1>
+                <p>Chọn 1 trong 5 kỹ năng bên dưới để vào thẳng bài tập thực hành. Giao diện tối ưu giúp bạn tiết kiệm tối đa thời gian.</p>
+            </div>
+
+            <div class="skill-grid" id="skill-grid">
+                <!-- Sẽ được render tự động bằng JS để đảm bảo sạch lỗi -->
+            </div>
+        </div>
+
+        <!-- TRANG DANH SÁCH BÀI HỌC CỦA TỪNG MỤC -->
+        <div id="lesson-view" class="view">
+            <div class="section-header">
+                <h2 id="current-skill-title">Tên Kỹ Năng</h2>
+                <p id="current-skill-desc">Danh sách các bài luyện tập chuyên sâu</p>
+            </div>
+            <div class="lesson-list" id="lesson-list">
+                <!-- Danh sách bài học render tại đây -->
+            </div>
+        </div>
+    </main>
+
+    <!-- TRÌNH LÀM BÀI TRỰC TIẾP TRONG APP (IFRAME) -->
+    <div id="practice-view">
+        <div class="practice-toolbar">
+            <span class="practice-title" id="iframe-title">Đang luyện tập...</span>
+            <a id="iframe-external-link" href="#" target="_blank" style="color: var(--accent-blue); text-decoration: none; font-weight: 600;">
+                Mở toàn màn hình (Tab mới) &#8599;
+            </a>
+        </div>
+        <div class="iframe-container">
+            <iframe id="practice-iframe" src="" title="Aptis Practice"></iframe>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <strong>APTIS STUDY</strong> &bull; Thiết kế tối ưu tốc độ & hiệu suất học tập.
+    </footer>
+
+    <!-- JAVASCRIPT XỬ LÝ LOGIC -->
+    <script>
+        // DỮ LIỆU ĐÃ ĐƯỢC KIỂM TRA KỸ LƯỠNG TỪ FILE CỦA BẠN
+        // Đảm bảo đúng thứ tự 5 mục yêu cầu: Speaking, Writing, Grammar-Vocabulary, Listening, Reading
+        const aptisData = [
+            {
+                id: 'speaking',
+                name: 'Speaking',
+                icon: '🎙️',
+                desc: 'Luyện phản xạ nói 4 Parts chuẩn cấu trúc đề thi.',
+                lessons: [
+                    {
+                        title: 'Full Test & Luyện Tập Speaking',
+                        url: 'https://physicsist.github.io/Aptis-Speaking/',
+                        tip: 'Mẹo GV: Luôn nói đủ thời gian (30s hoặc 45s), dùng các từ nối (Firstly, Moreover, To be honest) để kéo dài câu trả lời tự nhiên.'
+                    }
+                ]
+            },
+            {
+                id: 'writing',
+                name: 'Writing',
+                icon: '✍️',
+                desc: 'Thực hành viết tin nhắn, trả lời câu hỏi và viết email.',
+                lessons: [
+                    {
+                        title: 'Full Luyện Tập Writing (Part 1 - Part 4)',
+                        url: 'https://physicsist.github.io/Aptis-Writing/',
+                        tip: 'Mẹo GV: Chú ý sát số lượng từ yêu cầu. Part 4 nhớ phân biệt rõ văn phong thân mật (Informal - gửi bạn) và trang trọng (Formal - gửi quản lý).'
+                    }
+                ]
+            },
+            {
+                id: 'grammar-vocab',
+                name: 'Grammar - Vocabulary',
+                icon: '📘',
+                desc: 'Củng cố 25 câu ngữ pháp và 25 câu từ vựng trọng tâm.',
+                lessons: [
+                    {
+                        title: 'Ngân Hàng Đề Grammar & Vocabulary',
+                        url: 'https://physicsist.github.io/Aptis-Grammar-Vocabulary/',
+                        tip: 'Mẹo GV: Phần từ vựng thường lặp lại các cặp từ đồng nghĩa (Synonyms) và cụm từ cố định (Collocations). Làm đi làm lại để nhớ mặt chữ.'
+                    }
+                ]
+            },
+            {
+                id: 'listening',
+                name: 'Listening',
+                icon: '🎧',
+                desc: 'Luyện nghe bắt từ khóa chia theo từng Part (P1 - P4).',
+                lessons: [
+                    {
+                        title: 'Listening - Part 1 (Nhận diện thông tin)',
+                        url: 'https://physicsist.github.io/Aptis-Listening-P1/',
+                        tip: 'Mẹo GV: Đọc kỹ câu hỏi để bắt số điện thoại, thời gian, tên riêng.'
+                    },
+                    {
+                        title: 'Listening - Part 2 (Nghe hội thoại/độc thoại ngắn)',
+                        url: 'https://physicsist.github.io/Aptis-Listenting-P2/',
+                        tip: 'Mẹo GV: Cẩn thận bẫy phủ định hoặc thay đổi ý định ở cuối câu.'
+                    },
+                    {
+                        title: 'Listening - Part 3 (Nghe suy luận & quan điểm)',
+                        url: 'https://physicsist.github.io/Aptis-Listenting-P3/',
+                        tip: 'Mẹo GV: Chú ý thái độ của người nói (đồng tình hay phản đối).'
+                    },
+                    {
+                        title: 'Listening - Part 4 (Bài nghe dài - 2 câu hỏi/bài)',
+                        url: 'https://physicsist.github.io/Aptis-Listenting-P4/',
+                        tip: 'Mẹo GV: Đọc trước các phương án, gạch chân từ khóa trước khi băng chạy.'
+                    }
+                ]
+            },
+            {
+                id: 'reading',
+                name: 'Reading',
+                icon: '📖',
+                desc: 'Nâng cao tốc độ đọc hiểu từ Part 1 đến Part 5.',
+                lessons: [
+                    {
+                        title: 'Reading - Part 1 (Điền từ vào đoạn văn ngắn)',
+                        url: 'https://physicsist.github.io/Aptis-Reading-P1/',
+                        tip: 'Mẹo GV: Phần này rất dễ, chỉ nên làm trong 2-3 phút để dành thời gian cho các phần sau.'
+                    },
+                    {
+                        title: 'Reading - Part 2 & 3 (Sắp xếp câu & Đọc hiểu quan điểm)',
+                        url: 'https://physicsist.github.io/Aptis-Reading-P23/',
+                        tip: 'Mẹo GV: Khi sắp xếp câu (Part 2), hãy tìm câu mở đầu tổng quát và dựa vào các đại từ (He, She, It, This, Therefore) để nối.'
+                    },
+                    {
+                        title: 'Reading - Part 4 (Nối tiêu đề đoạn văn - Matching Headings)',
+                        url: 'https://physicsist.github.io/Aptis-Reading-P4/',
+                        tip: 'Mẹo GV: Đọc câu đầu và câu cuối mỗi đoạn để nắm ý chính (Skimming) nhanh nhất.'
+                    },
+                    {
+                        title: 'Reading - Part 5 (Bài tập thực hành bổ trợ / Sắp xếp đoạn)',
+                        url: 'https://physicsist.github.io/Aptis-Reading-P2/',
+                        tip: 'Mẹo GV: Luyện tập nhuần nhuyễn mạch logic của văn bản để đạt điểm tối đa.'
+                    }
+                ]
+            }
+        ];
+
+        // TRẠNG THÁI ĐIỀU HƯỚNG
+        let currentState = 'home'; // 'home', 'lesson', 'practice'
+        let selectedSkillId = null;
+
+        // KHỞI TẠO GIAO DIỆN KHI MỞ APP
+        function initApp() {
+            const grid = document.getElementById('skill-grid');
+            grid.innerHTML = aptisData.map(skill => `
+                <div class="skill-card" onclick="openSkill('${skill.id}')">
+                    <div>
+                        <div class="skill-header">
+                            <div class="skill-icon">${skill.icon}</div>
+                            <div class="skill-title">${skill.name}</div>
+                        </div>
+                        <p class="skill-desc">${skill.desc}</p>
+                    </div>
+                    <div class="skill-meta">
+                        <span>${skill.lessons.length} bài học có sẵn</span>
+                        <span>Vào học ngay &#8594;</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // CHUYỂN TỚI DANH SÁCH BÀI HỌC CỦA MỤC ĐÃ CHỌN
+        function openSkill(skillId) {
+            const skill = aptisData.find(s => s.id === skillId);
+            if (!skill) return;
+
+            selectedSkillId = skillId;
+            currentState = 'lesson';
+
+            document.getElementById('current-skill-title').innerHTML = `${skill.icon} ${skill.name}`;
+            document.getElementById('current-skill-desc').textContent = skill.desc;
+
+            const lessonList = document.getElementById('lesson-list');
+            lessonList.innerHTML = skill.lessons.map((lesson, index) => `
+                <div class="lesson-item">
+                    <div class="lesson-info">
+                        <div class="lesson-title">
+                            <span>Bài ${index + 1}: ${lesson.title}</span>
+                        </div>
+                        <div class="teacher-tip">💡 ${lesson.tip}</div>
+                    </div>
+                    <div class="lesson-actions">
+                        <button class="btn btn-primary" onclick="openPracticeInApp('${lesson.url}', '${lesson.title}')">
+                            Làm bài ngay (Trong App)
+                        </button>
+                        <a href="${lesson.url}" target="_blank" class="btn btn-outline">
+                            Mở Tab mới &#8599;
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+
+            updateView();
+        }
+
+        // MỞ BÀI HỌC TRỰC TIẾP TRONG APP (KHÔNG CẦN CHUYỂN TAB)
+        function openPracticeInApp(url, title) {
+            currentState = 'practice';
+            document.getElementById('iframe-title').textContent = title;
+            document.getElementById('iframe-external-link').href = url;
+            document.getElementById('practice-iframe').src = url;
+            updateView();
+        }
+
+        // QUAY VỀ TRANG CHỦ
+        function showHome() {
+            currentState = 'home';
+            document.getElementById('practice-iframe').src = ''; // Giải phóng bộ nhớ RAM ngay lập tức
+            updateView();
+        }
+
+        // NÚT QUAY LẠI THÔNG MINH
+        function goBack() {
+            if (currentState === 'practice') {
+                document.getElementById('practice-iframe').src = ''; // Chống lag
+                currentState = 'lesson';
+            } else if (currentState === 'lesson') {
+                currentState = 'home';
+            }
+            updateView();
+        }
+
+        // CẬP NHẬT TRẠNG THÁI HIỂN THỊ
+        function updateView() {
+            const homeView = document.getElementById('home-view');
+            const lessonView = document.getElementById('lesson-view');
+            const practiceView = document.getElementById('practice-view');
+            const btnBack = document.getElementById('btn-back');
+
+            homeView.classList.remove('active');
+            lessonView.classList.remove('active');
+            practiceView.classList.remove('active');
+
+            if (currentState === 'home') {
+                homeView.classList.add('active');
+                btnBack.style.display = 'none';
+            } else if (currentState === 'lesson') {
+                lessonView.classList.add('active');
+                btnBack.style.display = 'inline-flex';
+            } else if (currentState === 'practice') {
+                practiceView.classList.add('active');
+                btnBack.style.display = 'inline-flex';
+            }
+            window.scrollTo(0, 0);
+        }
+
+        // Chạy ứng dụng ngay khi tải xong DOM
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
